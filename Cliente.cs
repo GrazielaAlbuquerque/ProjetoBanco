@@ -1,32 +1,41 @@
+using Internal;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProjetoBanco
 {
-    public class Cliente
+      public abstract class Cliente 
     {
-        public string Nome {get; set; }
-        public string CPF {get; set; }
-        public string Email {get; set; }
-        public string Telefone {get; set; }
-        public string Endereco {get; set; }
-        public DateTime DataNascimento {get; set; }
-        public int NumeroConta {get; set; }
-        public double Saldo {get; set; }
+        public string Email { get; set; }
+        public string Telefone { get; set; }
+        public string Endereco { get; set; }
+        public int NumeroConta { get; set; }
+        public string TipoConta { get; set; }
+        public double Saldo {  get {return GetSaldo(); }  private set{} }
+        
+        public List<Transacao> Extrato { get; set; }
 
-        public int Idade { get {return (int) (Math.Floor((DateTime.Now - DataNascimento).TotalDays / 365,25)); } set {}}
-    
+        public Cliente()
+        {
+            Extrato = new List<Transacao>();
+        }
+        public Cliente(string email, string telefone, string end,int numeroConta, string tipoConta) :this()
+        {
+            Email= email;
+            Telefone =telefone; 
+            Endereco = end;
+            NumeroConta = numeroConta;
+            TipoConta = tipoConta;
+        }
+        public virtual void ResumoCliente(){ //metodo sob
+           Console.WriteLine($"{NumeroConta}  | {TipoConta} |  {Saldo}  ");
+        }
 
-        //public List<Transacao> Extrato {get; set}
-
-public string ResumoCliente(){
-    return $"{NumeroConta}           |      {Nome}      |       {CPF}";
-}
-
-public bool EhMaior(){
-    return Idade >=18;
-}
-}
+        private double GetSaldo(){
+            double saldo = 0;
+            foreach(Transacao transacao  in Extrato){
+                saldo += transacao.Valor;
+            }
+            return saldo;
+        }
+    }
 }
